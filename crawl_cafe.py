@@ -27,8 +27,8 @@ while True:
     origin_df = pd.read_csv('crawl_faq.csv', encoding='utf-8-sig')
 
     url = 'https://nid.naver.com/nidlogin.login'
-    id = "pnp_jkcho"
-    pw = "dnjfqoekd300!"
+    id = ""
+    pw = ""
 
     chrome_options = Options()
     chrome_options.add_argument("--disable-blink-features=AutomationControlled")
