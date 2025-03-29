@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: Get issue list from MantisBT via proxy
 servers:
-  - url: https://d3e4-xx-xx-xx-xx.ngrok-free.app
+  - url: https://0091-211-181-26-234.ngrok-free.app
 paths:
   /issues:
     get:
