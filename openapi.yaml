@@ -1,0 +1,39 @@
+openapi: 3.0.1
+info:
+  title: PNP MantisBT Proxy API
+  version: 1.0.0
+  description: Get issue list from MantisBT via proxy
+servers:
+  - url: https://d3e4-xx-xx-xx-xx.ngrok-free.app
+paths:
+  /issues:
+    get:
+      operationId: getIssues
+      summary: Get list of issues
+      responses:
+        '200':
+          description: A list of issues
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  issues:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Issue'
+components:
+  schemas:
+    Issue:
+      type: object
+      properties:
+        id:
+          type: integer
+        summary:
+          type: string
+        description:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
