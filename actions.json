@@ -1,0 +1,17 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Mantis 이슈 조회",
+  "name_for_model": "mantis_issue_query",
+  "description_for_model": "Fetches issues from PNP MantisBT.",
+  "description_for_human": "PNP MantisBT 시스템에서 이슈를 조회합니다.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://yourdomain.com/openapi.yaml"
+  },
+  "logo_url": "https://yourdomain.com/logo.png",
+  "contact_email": "your@email.com",
+  "legal_info_url": "https://yourdomain.com/terms"
+}
