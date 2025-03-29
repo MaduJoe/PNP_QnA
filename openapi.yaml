@@ -1,23 +1,23 @@
 openapi: 3.0.1
 info:
   title: PNP MantisBT Proxy API
-  version: 1.0.0
+  version: 1.1.0
 servers:
   - url: https://0091-211-181-26-234.ngrok-free.app
 paths:
   /issues/{issue_id}:
     get:
       operationId: getIssueById
-      summary: Get issue by ID
+      summary: Get a specific issue by ID
       parameters:
-        - in: path
-          name: issue_id
+        - name: issue_id
+          in: path
           required: true
           schema:
             type: integer
       responses:
         '200':
-          description: OK
+          description: A single issue
           content:
             application/json:
               schema:
@@ -33,15 +33,7 @@ components:
           type: string
         description:
           type: string
-        reporter:
-          type: object
-          properties:
-            real_name:
-              type: string
         created_at:
           type: string
-        status:
-          type: object
-          properties:
-            name:
-              type: string
+        updated_at:
+          type: string
