@@ -80,34 +80,43 @@ mantis_api:
 python pnp_qna_bot.py
 ```
 
-## 추가 기능
-
-- **크롤링 스크립트**: `scripts/crawl_cafe.py`를 통해 네이버 카페의 FAQ 데이터를 수집하여 학습 데이터로 활용 가능
-- **MantisBT API 연동**: OpenAPI 규격(openapi.yaml)을 통해 이슈 추적 시스템과 연동
-
-## 아키텍처
-
-```
-                  ┌─────────────┐
-                  │  LINE 메신저  │
-                  └──────┬──────┘
-                         │
-                         ▼
-┌────────────────────────────────────────┐
-│            Flask 웹 서버                │
-│      (BugSearchBot 클래스 실행)         │
-└─────────────┬─────────────┬────────────┘
-              │             │
-              ▼             ▼
-┌────────────────┐  ┌─────────────────┐
-│   OpenAI API   │  │    MantisBT API  │
-└────────────────┘  └─────────────────┘
+4. **Ngrok 터널링**
+```bash
+ngrok http 5000
 ```
 
-## 라이센스
+5. **LINE Webhook 설정**
+- [LINE Developers Console](https://developers.line.biz/console/)에서 채널 생성
+- Webhook URL에 `https://<your-ngrok>.ngrok.io/callback` 입력
 
-이 프로젝트는 MIT 라이센스 하에 배포됩니다.
+## 🧪 예시 흐름
 
-## 개발자
+1. 사용자가 챗봇에게 메시지를 보냄
+2. 챗봇이 Carousel로 "Bugs QnA" 또는 "Product QnA"를 선택하도록 유도
+3. 사용자가 키워드 입력 → OpenAI가 요약 응답 생성
+4. 응답은 LINE 메시지로 푸시됨
 
-- MaduJoe - 초기 개발 
+## 📂 프로젝트 구조
+
+```bash
+PNP_QnA/
+├── pnp_qna_bot.py            # 메인 Flask 애플리케이션 및 LINE 핸들러
+├── config.yaml               # 환경 설정 파일 (비공개 필요)
+├── openapi.yaml              # MantisBT API 명세
+├── static/                   # 이미지 파일 (Carousel에 사용)
+└── README.md                 # 프로젝트 설명 문서
+```
+
+## 👨‍💻 개발팀
+
+- **팀명**: QA Ninjas  
+- **역할 분담**:  
+  - 챗봇/AI 연동: 조재근 (jaekeunv@gmail.com) 
+  - 시스템 구조 설계: 조재근
+  - 발표/문서화: 조재근/김하림
+
+## 📎 참고 자료
+
+- [LINE Messaging API 공식문서](https://developers.line.biz/en/docs/messaging-api/overview)
+- [OpenAI Assistants API](https://platform.openai.com/playground/assistants)
+- [Toss Payments 용어사전(Webhook 등)](https://docs.tosspayments.com/resources/glossary/webhook)
