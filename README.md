@@ -111,9 +111,9 @@ PNP_QnA/
 
 - **팀명**: QA Ninjas  
 - **역할 분담**:  
-  - 챗봇/AI 연동: Developer A  
-  - 시스템 구조 설계: Developer B  
-  - 발표/문서화: Developer C
+  - 챗봇/AI 연동: 조재근
+  - 시스템 구조 설계: 조재근  
+  - 발표/문서화: 조재근/김하림
 
 ## 📎 참고 자료
 
