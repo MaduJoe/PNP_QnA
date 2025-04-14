@@ -73,6 +73,7 @@ app:
 mantis_api:
   url: "https://your-ngrok-url/api/rest/index.php"
   api_key: "YOUR_MANTIS_API_KEY"
+...
 ```
 
 3. **서버 실행**
@@ -103,6 +104,7 @@ PNP_QnA/
 ├── pnp_qna_bot.py            # 메인 Flask 애플리케이션 및 LINE 핸들러
 ├── config.yaml               # 환경 설정 파일 (비공개 필요)
 ├── openapi.yaml              # MantisBT API 명세
+├── scripst/                  # 네이버 카페 데이터 크로링 스크립트
 ├── static/                   # 이미지 파일 (Carousel에 사용)
 └── README.md                 # 프로젝트 설명 문서
 ```
