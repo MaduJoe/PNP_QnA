@@ -1,0 +1,27 @@
+line_bot:
+  access_token: ""      # Line Messaging API Access Token (채널 토큰)
+  channel_secret: ""    # Line Messaging API Channel Secret (채널 서명 검증용 시크릿 키)
+
+mantis_api:
+  url: ""                                         # Mantis API의 기본 URL (예: http://mantis.example.com/api/rest/)
+  api_key: "V"                                    # Mantis API 인증을 위한 개인 API 키
+  page_size: 50                                   # Mantis API에서 한 번에 조회할 이슈 수
+  max_issues: 5                                   # 사용자에게 응답할 최대 이슈 수 (예: 검색 결과 중 상위 5개)
+
+app:
+  debug: True                                     # Flask 앱 디버그 모드 설정 (개발 중 True, 배포 시 False 권장)
+  port: 5000                                      # Flask 앱이 실행될 포트 번호
+
+openai:
+  api_key: ""                                     # OpenAI API 키 (GPT 호출을 위한 인증키)
+  
+  # 아래 항목들은 각각의 Custom GPT (GPTs) 또는 Assistant 인스턴스를 구분하기 위한 ID입니다.
+  # OpenAI 플랫폼에서 생성한 개별 assistant에게 메시지를 보낼 때 사용됩니다.
+
+  product_id: ""                                  # Product 관련 GPT Assistant ID (예: 제품 문의 응답용)
+  product_thread_id: ""                           # Product GPT와 대화한 thread ID (지속적인 대화 흐름 유지용)
+
+  bugs_id: ""                                     # Bugs 관련 GPT Assistant ID (버그/이슈 문의 응답용)
+  bugs_thread_id: ""                              # Bugs GPT와의 대화 thread ID
+
+  cafe_id: ""                                     # Cafe 관련 GPT Assistant ID (카페나 일반 문의용)
