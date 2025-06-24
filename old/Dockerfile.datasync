@@ -1,0 +1,43 @@
+FROM python:3.9-slim
+
+WORKDIR /app
+
+# 시스템 패키지 설치 (Chrome 및 의존성)
+RUN apt-get update && apt-get install -y \
+    wget \
+    gnupg2 \
+    unzip \
+    curl \
+    xvfb \
+    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Python 의존성 설치
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt \
+    && pip install webdriver-manager
+
+# 크롤링 스크립트 복사
+COPY scripts/ ./scripts/
+COPY config.yaml ./
+
+# 환경 변수 설정
+ENV PYTHONPATH=/app
+ENV DISPLAY=:99
+
+# 실행 스크립트 생성
+RUN echo '#!/bin/bash\n\
+Xvfb :99 -screen 0 1024x768x24 &\n\
+while true; do\n\
+    echo "Starting data sync at $(date)"\n\
+    python scripts/enhanced_crawl_cafe.py\n\
+    echo "Data sync completed. Sleeping for $SCHEDULE_INTERVAL seconds..."\n\
+    sleep ${SCHEDULE_INTERVAL:-3600}\n\
+done' > /app/run_datasync.sh \
+    && chmod +x /app/run_datasync.sh
+
+CMD ["/app/run_datasync.sh"] 

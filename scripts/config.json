@@ -1,0 +1,9 @@
+{
+  "naver_id": "pnp_jkcho",
+  "naver_pw": "100djrqjsek!",
+  "cafe_id": 29308153,
+  "menu_id": 63,
+  "output_file": "crawl_faq_enhanced.csv",
+  "max_pages": 3,
+  "delay_seconds": 2
+}

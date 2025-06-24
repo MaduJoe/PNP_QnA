@@ -1,27 +1,41 @@
+# line_bot:
+#   access_token: ""      # Line Messaging API Access Token (채널 토큰)
+#   channel_secret: ""    # Line Messaging API Channel Secret (채널 서명 검증용 시크릿 키)
+
 line_bot:
-  access_token: ""      # Line Messaging API Access Token (채널 토큰)
-  channel_secret: ""    # Line Messaging API Channel Secret (채널 서명 검증용 시크릿 키)
+  access_token: "M2UQE4rOhiXD8TyyprqCpDdQVfmNrpKWRh8embjeieLS1Lu6EaCsY8C7j9Mc3p9plHTnccm0TKmG1BKHCcEUnnsrHHC/DeU2ps/Kq5CUJR1b/454hsuWqXRRBHoQEJfkA2DfxRnfwA6tMJgqJtV9XgdB04t89/1O/w1cDnyilFU="        # Line Messaging API Access Token
+  channel_secret: "43afab47db55a0226bf13fe4c170a97e"     # Line Messaging API Channel Secret
+
+# mantis_api:
+#   url: ""                                         # Mantis API의 기본 URL (예: http://mantis.example.com/api/rest/)
+#   api_key: "V"                                    # Mantis API 인증을 위한 개인 API 키
+#   page_size: 50                                   # Mantis API에서 한 번에 조회할 이슈 수
+#   max_issues: 5                                   # 사용자에게 응답할 최대 이슈 수 (예: 검색 결과 중 상위 5개)
 
 mantis_api:
-  url: ""                                         # Mantis API의 기본 URL (예: http://mantis.example.com/api/rest/)
-  api_key: "V"                                    # Mantis API 인증을 위한 개인 API 키
-  page_size: 50                                   # Mantis API에서 한 번에 조회할 이슈 수
-  max_issues: 5                                   # 사용자에게 응답할 최대 이슈 수 (예: 검색 결과 중 상위 5개)
+  url: "https://bugs.pnpsecure.com/api/rest/index.php/issues"  # Mantis API Base URL
+  # url: "https://bugs.pnpsecure.com/api/rest/index.php/issues?page_size={page_size}&"  # Mantis API Base URL
+  api_key: "VTWnLywPscgWCxDh166WypK2Ic9ZVLDD"                  # Mantis API Key
+  page_size: 50                                  # Mantis API 페이지당 이슈 수
+  max_issues: 5                                   # 응답으로 반환할 최대 이슈 수
+
 
 app:
   debug: True                                     # Flask 앱 디버그 모드 설정 (개발 중 True, 배포 시 False 권장)
   port: 5000                                      # Flask 앱이 실행될 포트 번호
 
-openai:
-  api_key: ""                                     # OpenAI API 키 (GPT 호출을 위한 인증키)
-  
-  # 아래 항목들은 각각의 Custom GPT (GPTs) 또는 Assistant 인스턴스를 구분하기 위한 ID입니다.
-  # OpenAI 플랫폼에서 생성한 개별 assistant에게 메시지를 보낼 때 사용됩니다.
 
-  product_id: ""                                  # Product 관련 GPT Assistant ID (예: 제품 문의 응답용)
-  product_thread_id: ""                           # Product GPT와 대화한 thread ID (지속적인 대화 흐름 유지용)
+# 로컬 임베딩 시스템 설정
+embedding:
+  model_name: "jhgan/ko-sroberta-multitask"  # 한국어 임베딩 모델
+  cache_dir: "./embeddings_cache"            # 임베딩 캐시 저장 경로
+  batch_size: 32                             # 배치 크기
+  max_length: 512                            # 최대 토큰 길이
+  top_k: 3                                   # 반환할 상위 결과 수
 
-  bugs_id: ""                                     # Bugs 관련 GPT Assistant ID (버그/이슈 문의 응답용)
-  bugs_thread_id: ""                              # Bugs GPT와의 대화 thread ID
+# 데이터 설정
+data:
+  articles_path: "./scripts/"                # 게시글 데이터 경로
+  dbs_file: "cafe_articles_dbs.csv"         # DBS 게시글 파일
+  mgr_file: "cafe_articles_mgr.csv"         # Manager 게시글 파일
 
-  cafe_id: ""                                     # Cafe 관련 GPT Assistant ID (카페나 일반 문의용)

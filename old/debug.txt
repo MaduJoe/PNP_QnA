@@ -1,0 +1,102 @@
+2025-06-23 10:28:20,009 - INFO - 네이버 로그인 완료
+2025-06-23 10:28:20,009 - INFO - === 페이지별 즉시 스크랩 시작 (최대 3페이지) ===
+2025-06-23 10:28:20,009 - INFO - 📋 예상 수집량: 1페이지(~18개) + 2-6페이지(~15개씩) = 최대 93개
+2025-06-23 10:28:20,009 - INFO - 📄 2페이지 처리 시작... (예상: ~15개)
+2025-06-23 10:28:20,009 - INFO - URL 시도: https://cafe.naver.com/f-e/cafes/29308153/menus/64?page=2
+Created TensorFlow Lite XNNPACK delegate for CPU.
+2025-06-23 10:28:25,566 - INFO - 성공한 URL: https://cafe.naver.com/f-e/cafes/29308153/menus/64?page=2
+2025-06-23 10:28:29,019 - INFO - 먼저 메인 페이지에서 콘텐츠 확인
+2025-06-23 10:28:37,056 - INFO - 페이지 로드 후 총 5개 iframe 발견
+2025-06-23 10:28:37,094 - INFO - iframe 0: name='padding', id='gnb_my_lyr_iframe', title='빈 프레임', src='None'
+2025-06-23 10:28:37,126 - INFO - iframe 1: name='padding', id='gnb_notice_lyr_iframe', title='빈 프레임', src='None'
+2025-06-23 10:28:37,146 - INFO - iframe 2: name='padding', id='gnb_service_lyr_iframe', title='빈 프레임', src='None'
+2025-06-23 10:28:37,179 - INFO - iframe 3: name='padding', id='gnb_svc_more_iframe', title='빈 프레임', src='None'
+2025-06-23 10:28:37,197 - INFO - iframe 4: name='', id='cafe_sdk_tgtLREC', title='AD', src='None'
+2025-06-23 10:28:37,197 - WARNING - 적절한 iframe을 찾지 못함, 메인 페이지에서 진행
+2025-06-23 10:28:37,233 - INFO - 페이지 소스에 class='article' 태그가 존재합니다
+2025-06-23 10:28:37,233 - INFO - 총 15개의 article 클래스 태그 발견
+2025-06-23 10:28:37,233 - INFO - 페이지 소스에 type_articleNumber 클래스가 존재합니다
+2025-06-23 10:28:37,233 - INFO - 총 15개의 게시글 번호 발견
+2025-06-23 10:28:37,259 - INFO - 총 16개의 tr 요소 발견
+2025-06-23 10:28:37,279 - INFO - 게시글 번호가 포함된 tr: 15개
+2025-06-23 10:28:37,309 - INFO - 첫 번째 게시글 번호: 6003
+2025-06-23 10:28:37,332 - INFO - 첫 번째 tr에서 발견된 링크 수: 1
+2025-06-23 10:28:37,363 - INFO - 링크 0: class='article', href='https://cafe.naver.com/f-e/cafes/29308153/articles/6003?menuid=64&referrerAllArticles=false&page=2', text='[TIP] 매니
+저 IP 객체 정책 적용 불가 현상 공유 (csv 불러오기, mac addr'
+2025-06-23 10:28:37,379 - INFO - 선택자 'table.article-table tbody tr': 15개 tr 요소 발견
+2025-06-23 10:28:37,408 - INFO - tr 0에서 게시글 발견: ID=6003
+2025-06-23 10:28:37,408 - INFO - 제목: [TIP] 매니저 IP 객체 정책 적용 불가 현상 공유 (csv 불러오기, mac addr...
+2025-06-23 10:28:37,408 - INFO - URL: https://cafe.naver.com/f-e/cafes/29308153/articles/6003?menuid=64&referrerAllArticles=false&page=2
+2025-06-23 10:28:37,426 - INFO - tr 1에서 게시글 발견: ID=5941
+2025-06-23 10:28:37,426 - INFO - 제목: [TIP] 웹 포트를 3443이 아닌 다른 포트를 사용하는 경우, 매니저 2차인증 기능 사...
+2025-06-23 10:28:37,426 - INFO - URL: https://cafe.naver.com/f-e/cafes/29308153/articles/5941?menuid=64&referrerAllArticles=false&page=2
+2025-06-23 10:28:37,464 - INFO - tr 2에서 게시글 발견: ID=5854
+2025-06-23 10:28:37,464 - INFO - 제목: [TIP][MANAGER] 매니저 중복 로그인 허용/차단 설정 기능...
+2025-06-23 10:28:37,464 - INFO - URL: https://cafe.naver.com/f-e/cafes/29308153/articles/5854?menuid=64&referrerAllArticles=false&page=2
+2025-06-23 10:28:37,490 - INFO - tr 3에서 게시글 발견: ID=5844
+2025-06-23 10:28:37,491 - INFO - 제목: [TIP] 매니저 프로그램 삭제 시 "you hava newer version of the...
+2025-06-23 10:28:37,492 - INFO - URL: https://cafe.naver.com/f-e/cafes/29308153/articles/5844?menuid=64&referrerAllArticles=false&page=2
+2025-06-23 10:28:37,516 - INFO - tr 4에서 게시글 발견: ID=5829
+2025-06-23 10:28:37,516 - INFO - 제목: [Manager] 7.0 매니저 서비스 생성시 도메인 주소 입력이 불가능한 경우...
+2025-06-23 10:28:37,516 - INFO - URL: https://cafe.naver.com/f-e/cafes/29308153/articles/5829?menuid=64&referrerAllArticles=false&page=2
+2025-06-23 10:28:37,543 - INFO - tr 5에서 게시글 발견: ID=5680
+2025-06-23 10:28:37,543 - INFO - 제목: 7.0 매니저 정책 설정 중 '메모리가 부족합니다' 팝업 발생 현상...
+2025-06-23 10:28:37,543 - INFO - URL: https://cafe.naver.com/f-e/cafes/29308153/articles/5680?menuid=64&referrerAllArticles=false&page=2
+2025-06-23 10:28:37,572 - INFO - tr 6에서 게시글 발견: ID=5669
+2025-06-23 10:28:37,573 - INFO - 제목: [TIP]MANAGER 2차인증 기능 설정 방법...
+2025-06-23 10:28:37,573 - INFO - URL: https://cafe.naver.com/f-e/cafes/29308153/articles/5669?menuid=64&referrerAllArticles=false&page=2
+2025-06-23 10:28:37,599 - INFO - tr 7에서 게시글 발견: ID=5656
+2025-06-23 10:28:37,599 - INFO - 제목: [TIP] DB2(UDB, v11.5.8) 접속가능한 툴 / 드라이브 / 가이드메뉴얼 공유...
+2025-06-23 10:28:37,599 - INFO - URL: https://cafe.naver.com/f-e/cafes/29308153/articles/5656?menuid=64&referrerAllArticles=false&page=2
+2025-06-23 10:28:37,627 - INFO - tr 8에서 게시글 발견: ID=5631
+2025-06-23 10:28:37,627 - INFO - 제목: [TIP][MANAGER] 시간동기화 설정이 안 될 경우...
+2025-06-23 10:28:37,627 - INFO - URL: https://cafe.naver.com/f-e/cafes/29308153/articles/5631?menuid=64&referrerAllArticles=false&page=2
+2025-06-23 10:28:37,658 - INFO - tr 9에서 게시글 발견: ID=5457
+2025-06-23 10:28:37,658 - INFO - 제목: [TIP] 특정 디스크 경고 메일 연동 방법 공유...
+2025-06-23 10:28:37,660 - INFO - URL: https://cafe.naver.com/f-e/cafes/29308153/articles/5457?menuid=64&referrerAllArticles=false&page=2
+2025-06-23 10:28:37,683 - INFO - tr 10에서 게시글 발견: ID=5345
+2025-06-23 10:28:37,683 - INFO - 제목: [TIP][MANAGER] 명령어 로그 조회 중 Merge Into 문 조회 누락...
+2025-06-23 10:28:37,683 - INFO - URL: https://cafe.naver.com/f-e/cafes/29308153/articles/5345?menuid=64&referrerAllArticles=false&page=2
+2025-06-23 10:28:37,713 - INFO - tr 11에서 게시글 발견: ID=4989
+2025-06-23 10:28:37,714 - INFO - 제목: [TIP][MANAGER] DBSAFER 서버 모니터링 파티션 지정...
+2025-06-23 10:28:37,714 - INFO - URL: https://cafe.naver.com/f-e/cafes/29308153/articles/4989?menuid=64&referrerAllArticles=false&page=2
+2025-06-23 10:28:37,739 - INFO - tr 12에서 게시글 발견: ID=4873
+2025-06-23 10:28:37,739 - INFO - 제목: [TIP][MANAGER] PC Agent 최초 로그인 시 초기 비밀번호 강제 변경 설정 ...
+2025-06-23 10:28:37,740 - INFO - URL: https://cafe.naver.com/f-e/cafes/29308153/articles/4873?menuid=64&referrerAllArticles=false&page=2
+2025-06-23 10:28:37,766 - INFO - tr 13에서 게시글 발견: ID=4825
+2025-06-23 10:28:37,766 - INFO - 제목: [공유][드라마앤컴퍼니] 접속계정 띄어쓰기로 인한 접속차단...
+2025-06-23 10:28:37,766 - INFO - URL: https://cafe.naver.com/f-e/cafes/29308153/articles/4825?menuid=64&referrerAllArticles=false&page=2
+2025-06-23 10:28:37,797 - INFO - tr 14에서 게시글 발견: ID=4576
+2025-06-23 10:28:37,797 - INFO - 제목: [TIP] EnterpriseManager 설치 후 시스템 오류 발생 시 가이드...
+2025-06-23 10:28:37,797 - INFO - URL: https://cafe.naver.com/f-e/cafes/29308153/articles/4576?menuid=64&referrerAllArticles=false&page=2
+2025-06-23 10:28:37,797 - INFO - 페이지당 15개 제한에 도달
+2025-06-23 10:28:37,798 - INFO - 페이지 2에서 15개 게시글 ID 수집
+2025-06-23 10:28:37,798 - INFO - 📋 2페이지에서 15개 게시글 발견, 즉시 스크랩 시작
+2025-06-23 10:28:37,798 - INFO - [2페이지 1/15] 전체 진행률: 1/93 - 게시글 ID: 6003
+2025-06-23 10:28:37,798 - INFO - 게시글 상세 접근: https://cafe.naver.com/pnpsecure2/6003
+2025-06-23 10:28:45,568 - INFO - 게시글 페이지 cafe_main iframe 전환 성공
+2025-06-23 10:28:45,602 - INFO - 제목 발견: [TIP] 매니저 IP 객체 정책 적용 불가 현상 공유 (csv 불러오기, mac address 컬럼)
+...
+
+
+
+2025-06-23 10:31:57,802 - INFO - 성공한 URL: https://cafe.naver.com/ca-fe/cafes/29308153/menus/64?page=3
+2025-06-23 10:32:00,857 - INFO - 먼저 메인 페이지에서 콘텐츠 확인
+2025-06-23 10:32:08,866 - INFO - 페이지 로드 후 총 0개 iframe 발견
+2025-06-23 10:32:08,866 - WARNING - 적절한 iframe을 찾지 못함, 메인 페이지에서 진행
+2025-06-23 10:32:08,882 - WARNING - 페이지 소스에 class='article' 태그가 없습니다
+2025-06-23 10:32:08,903 - INFO - 총 0개의 tr 요소 발견
+2025-06-23 10:32:08,917 - INFO - 게시글 번호가 포함된 tr: 0개
+2025-06-23 10:32:08,923 - INFO - 선택자 'table.article-table tbody tr': 0개 tr 요소 발견
+2025-06-23 10:32:08,940 - INFO - 선택자 '.article-board table.article-table tbody tr': 0개 tr 요소 발견
+2025-06-23 10:32:08,953 - INFO - 선택자 '.cafe_content table.article-table tbody tr': 0개 tr 요소 발견
+2025-06-23 10:32:08,968 - INFO - 선택자 'div.article-board table tbody tr': 0개 tr 요소 발견
+2025-06-23 10:32:08,989 - INFO - 선택자 'table.article-table tr': 0개 tr 요소 발견
+2025-06-23 10:32:08,989 - INFO - 기존 선택자 실패, 더 일반적인 방법으로 시도
+2025-06-23 10:32:09,008 - INFO - 총 0개 테이블 발견
+2025-06-23 10:32:09,008 - INFO - 페이지 3에서 0개 게시글 ID 수집
+2025-06-23 10:32:09,008 - WARNING - 페이지 3에서 게시글을 찾을 수 없어 다음 페이지로 이동
+2025-06-23 10:32:09,008 - INFO - 🎉 모든 페이지 크롤링 완료! 총 15개 게시글이 CSV에 저장되었습니다.
+2025-06-23 10:32:11,427 - INFO - 📊 최종 수집 결과 요약:
+2025-06-23 10:32:11,427 - INFO -    - 총 게시글: 15개
+2025-06-23 10:32:11,427 - INFO -    - 저장된 파일: cafe_articles_mgr_2page.csv
