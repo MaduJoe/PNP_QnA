@@ -51,10 +51,9 @@ QnA-BoT/
 ├── fix_dependencies.py           # 종속성 해결 도구
 ├── config.yaml                   # 설정 파일
 ├── requirements.txt              # 패키지 목록
-├── docs/                         # 프로젝트 문서
-├── scripts/                      # 데이터 파일 및 크롤링 도구
-├── embeddings_cache/             # 임베딩 캐시 파일
-└── old/                          # 이전 버전 파일들
+├── README.md                     # 프로젝트 개요
+├── docs/                         # 프로젝트 상세
+└── scripts/                      # 데이터 파일 및 크롤링 도구
 ```
 
 ## 기술 스택
