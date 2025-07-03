@@ -6,11 +6,6 @@ line_bot:
   access_token: "M2UQE4rOhiXD8TyyprqCpDdQVfmNrpKWRh8embjeieLS1Lu6EaCsY8C7j9Mc3p9plHTnccm0TKmG1BKHCcEUnnsrHHC/DeU2ps/Kq5CUJR1b/454hsuWqXRRBHoQEJfkA2DfxRnfwA6tMJgqJtV9XgdB04t89/1O/w1cDnyilFU="        # Line Messaging API Access Token
   channel_secret: "43afab47db55a0226bf13fe4c170a97e"     # Line Messaging API Channel Secret
 
-# mantis_api:
-#   url: ""                                         # Mantis API의 기본 URL (예: http://mantis.example.com/api/rest/)
-#   api_key: "V"                                    # Mantis API 인증을 위한 개인 API 키
-#   page_size: 50                                   # Mantis API에서 한 번에 조회할 이슈 수
-#   max_issues: 5                                   # 사용자에게 응답할 최대 이슈 수 (예: 검색 결과 중 상위 5개)
 
 mantis_api:
   url: "https://bugs.pnpsecure.com/api/rest/index.php/issues"  # Mantis API Base URL
@@ -38,4 +33,5 @@ data:
   articles_path: "./scripts/"                # 게시글 데이터 경로
   dbs_file: "cafe_articles_dbs.csv"         # DBS 게시글 파일
   mgr_file: "cafe_articles_mgr.csv"         # Manager 게시글 파일
+  sa_file: "cafe_articles_sa.csv"         # sa 게시글 파일
 

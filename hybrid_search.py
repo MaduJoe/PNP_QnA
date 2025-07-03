@@ -83,9 +83,18 @@ class HybridSearchEngine:
             )
             mgr_articles = pd.read_csv(mgr_path, encoding="utf-8")
             mgr_articles["category"] = "Manager"
-            
+
+            # sa 게시글 데이터 로드
+            sa_path = os.path.join(
+                self.data_config["articles_path"], 
+                self.data_config["sa_file"]
+            )
+            sa_articles = pd.read_csv(sa_path, encoding="utf-8")
+            sa_articles["category"] = "SA"
+
+
             # 데이터 결합
-            self.articles_data = pd.concat([dbs_articles, mgr_articles], ignore_index=True)
+            self.articles_data = pd.concat([dbs_articles, mgr_articles, sa_articles], ignore_index=True)
             
             # 텍스트 전처리
             self.articles_data["combined_text"] = self.articles_data.apply(

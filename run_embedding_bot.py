@@ -36,7 +36,8 @@ def main():
         # 데이터 파일 체크
         data_files = [
             "./scripts/cafe_articles_dbs.csv",
-            "./scripts/cafe_articles_mgr.csv"
+            "./scripts/cafe_articles_mgr.csv",
+            "./scripts/cafe_articles_sa.csv"
         ]
         
         for file_path in data_files:
