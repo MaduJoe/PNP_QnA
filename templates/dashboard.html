@@ -1,0 +1,545 @@
+{% extends "base.html" %}
+
+{% block title %}대시보드 - PNP QnA Bot{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- 실시간 통계 카드들 -->
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card">
+            <div class="card-body text-center">
+                <div class="stat-number" id="total-queries">-</div>
+                <div class="stat-label">총 질의 수</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card success">
+            <div class="card-body text-center">
+                <div class="stat-number" id="unique-users">-</div>
+                <div class="stat-label">고유 사용자</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card warning">
+            <div class="card-body text-center">
+                <div class="stat-number" id="avg-response-time">-</div>
+                <div class="stat-label">평균 응답시간</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card info">
+            <div class="card-body text-center">
+                <div class="stat-number" id="recent-queries">-</div>
+                <div class="stat-label">최근 1시간</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 기간 선택 및 새로고침 버튼 -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-chart-line me-2"></i>분석 기간
+                    </h5>
+                    <div class="d-flex gap-2">
+                        <select id="period-selector" class="form-select" style="width: auto;">
+                            <option value="1">최근 1일</option>
+                            <option value="7" selected>최근 7일</option>
+                            <option value="30">최근 30일</option>
+                            <option value="90">최근 90일</option>
+                        </select>
+                        <button id="refresh-btn" class="btn btn-outline-primary btn-custom">
+                            <i class="fas fa-sync-alt"></i> 새로고침
+                        </button>
+                        <button id="export-btn" class="btn btn-success btn-custom">
+                            <i class="fas fa-download"></i> CSV 내보내기
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- 시간대별 질의 패턴 차트 -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-clock me-2"></i>시간대별 질의 패턴
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="hourly-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 일별 질의 추이 차트 -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-calendar me-2"></i>일별 질의 추이
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="daily-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- 카테고리별 통계 -->
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-tags me-2"></i>카테고리별 통계
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <div class="border-end">
+                            <div class="h4 text-primary" id="product-results">-</div>
+                            <div class="text-muted small">💻 Product QnA</div>
+                            <div class="text-muted small" id="product-avg-time">평균: -</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="h4 text-success" id="bugs-results">-</div>
+                        <div class="text-muted small">🐛 Bugs QnA</div>
+                        <div class="text-muted small" id="bugs-avg-time">평균: -</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 인기 키워드 -->
+    <div class="col-md-8 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-fire me-2"></i>인기 질의 키워드
+                </h5>
+            </div>
+            <div class="card-body">
+                <div id="popular-queries" class="d-flex flex-wrap gap-2">
+                    <!-- 키워드 배지들이 여기에 동적으로 추가됩니다 -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 최근 질의 목록 -->
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-list me-2"></i>최근 질의
+                </h5>
+                <a href="/queries" class="btn btn-outline-primary btn-sm btn-custom">
+                    전체 보기
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-container">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>시간</th>
+                                <th>사용자</th>
+                                <th>질의 내용</th>
+                                <th>결과</th>
+                                <th>응답시간</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recent-queries-table">
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">
+                                    <div class="loading"></div> 데이터 로딩 중...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let hourlyChart, dailyChart;
+let currentPeriod = 7;
+
+// 페이지 로드 시 초기화
+document.addEventListener('DOMContentLoaded', function() {
+    initCharts();
+    loadDashboardData();
+    loadRecentQueries();
+    
+    // 실시간 업데이트 (30초마다)
+    setInterval(loadLiveStats, 30000);
+    
+    // 이벤트 리스너
+    document.getElementById('period-selector').addEventListener('change', function() {
+        currentPeriod = parseInt(this.value);
+        loadDashboardData();
+    });
+    
+    document.getElementById('refresh-btn').addEventListener('click', function() {
+        this.innerHTML = '<div class="loading"></div>';
+        loadDashboardData();
+        loadRecentQueries();
+        setTimeout(() => {
+            this.innerHTML = '<i class="fas fa-sync-alt"></i> 새로고침';
+        }, 1000);
+    });
+    
+    document.getElementById('export-btn').addEventListener('click', exportToCSV);
+});
+
+function initCharts() {
+    // 시간대별 차트
+    const hourlyCtx = document.getElementById('hourly-chart').getContext('2d');
+    hourlyChart = new Chart(hourlyCtx, {
+        type: 'bar',
+        data: {
+            labels: Array.from({length: 24}, (_, i) => `${i}시`),
+            datasets: [{
+                label: '질의 수',
+                data: new Array(24).fill(0),
+                backgroundColor: 'rgba(37, 99, 235, 0.8)',
+                borderColor: 'rgba(37, 99, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+    
+    // 일별 차트
+    const dailyCtx = document.getElementById('daily-chart').getContext('2d');
+    dailyChart = new Chart(dailyCtx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: '질의 수',
+                data: [],
+                borderColor: 'rgba(5, 150, 105, 1)',
+                backgroundColor: 'rgba(5, 150, 105, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+}
+
+function loadDashboardData() {
+    fetch(`/api/stats?days=${currentPeriod}`)
+        .then(response => response.json())
+        .then(data => {
+            updateStats(data);
+            updateCharts(data);
+            updatePopularQueries(data.popular_queries || []);
+        })
+        .catch(error => {
+            console.error('데이터 로드 실패:', error);
+            showToast('데이터 로드에 실패했습니다.', 'danger');
+        });
+}
+
+function loadRecentQueries() {
+    fetch('/api/recent_queries?limit=10')
+        .then(response => response.json())
+        .then(data => {
+            updateRecentQueriesTable(data);
+        })
+        .catch(error => {
+            console.error('최근 질의 로드 실패:', error);
+        });
+}
+
+function loadLiveStats() {
+    fetch('/api/live_stats')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('recent-queries').textContent = formatNumber(data.recent_1hour);
+        })
+        .catch(error => {
+            console.error('실시간 통계 로드 실패:', error);
+        });
+}
+
+function updateStats(data) {
+    document.getElementById('total-queries').textContent = formatNumber(data.total_queries);
+    document.getElementById('unique-users').textContent = formatNumber(data.unique_users);
+    document.getElementById('avg-response-time').textContent = formatTime(data.avg_response_time_ms);
+    
+    // 카테고리별 통계
+    const categoryStats = data.category_stats || {};
+    document.getElementById('product-results').textContent = formatNumber(categoryStats.total_product_results || 0);
+    document.getElementById('bugs-results').textContent = formatNumber(categoryStats.total_bugs_results || 0);
+    document.getElementById('product-avg-time').textContent = `평균: ${formatTime(categoryStats.avg_product_response_time || 0)}`;
+    document.getElementById('bugs-avg-time').textContent = `평균: ${formatTime(categoryStats.avg_bugs_response_time || 0)}`;
+}
+
+function updateCharts(data) {
+    // 시간대별 차트 업데이트
+    if (data.hourly_data) {
+        const hourlyData = Object.values(data.hourly_data);
+        hourlyChart.data.datasets[0].data = hourlyData;
+        hourlyChart.update();
+    }
+    
+    // 일별 차트 업데이트
+    if (data.daily_data) {
+        const labels = data.daily_data.map(item => new Date(item[0]).toLocaleDateString('ko-KR'));
+        const values = data.daily_data.map(item => item[1]);
+        
+        dailyChart.data.labels = labels;
+        dailyChart.data.datasets[0].data = values;
+        dailyChart.update();
+    }
+}
+
+function updatePopularQueries(queries) {
+    const container = document.getElementById('popular-queries');
+    container.innerHTML = '';
+    
+    if (queries.length === 0) {
+        container.innerHTML = '<span class="text-muted">데이터가 없습니다.</span>';
+        return;
+    }
+    
+    queries.forEach((query, index) => {
+        const badge = document.createElement('span');
+        badge.className = `badge bg-primary badge-custom`;
+        badge.textContent = `${query.query} (${query.count})`;
+        badge.style.fontSize = `${Math.max(0.8, 1.2 - index * 0.1)}rem`;
+        container.appendChild(badge);
+    });
+}
+
+function updateRecentQueriesTable(queries) {
+    const tbody = document.getElementById('recent-queries-table');
+    tbody.innerHTML = '';
+    
+    if (queries.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">질의 데이터가 없습니다.</td></tr>';
+        return;
+    }
+    
+    queries.forEach(query => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${formatDate(query.timestamp)}</td>
+            <td><span class="badge bg-secondary">${query.user_id.substring(0, 8)}...</span></td>
+            <td>
+                <button type="button" class="btn btn-link text-start p-0 text-decoration-none" 
+                        onclick="showQueryDetail(${query.id})">
+                    ${query.query_text.length > 30 ? query.query_text.substring(0, 30) + '...' : query.query_text}
+                </button>
+            </td>
+            <td>
+                <span class="badge bg-info">${query.product_results_count || 0}</span>
+                <span class="badge bg-success">${query.bugs_results_count || 0}</span>
+            </td>
+            <td>${formatTime(query.response_time_ms || 0)}</td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function exportToCSV() {
+    const days = currentPeriod;
+    window.location.href = `/api/export_csv?days=${days}`;
+    showToast('CSV 파일 다운로드를 시작합니다.', 'success');
+}
+
+function showQueryDetail(queryId) {
+    // 모달 표시
+    const modal = new bootstrap.Modal(document.getElementById('queryDetailModal'));
+    modal.show();
+    
+    // 로딩 상태 표시
+    document.getElementById('modalQueryText').innerHTML = '<div class="text-center"><div class="spinner-border" role="status"></div><span class="ms-2">로딩 중...</span></div>';
+    document.getElementById('modalResults').innerHTML = '<div class="text-center"><div class="spinner-border" role="status"></div></div>';
+    
+    // API 호출
+    fetch(`/api/query_detail/${queryId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                showToast('질의 정보를 불러오는데 실패했습니다.', 'danger');
+                return;
+            }
+            
+            updateModalContent(data);
+        })
+        .catch(error => {
+            console.error('질의 상세정보 로드 실패:', error);
+            showToast('질의 정보를 불러오는데 실패했습니다.', 'danger');
+        });
+}
+
+function updateModalContent(query) {
+    // 기본 정보 업데이트
+    document.getElementById('modalQueryText').innerHTML = `
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title text-primary">질의 내용</h6>
+                <p class="card-text">${query.query_text}</p>
+                <small class="text-muted">
+                    <i class="fas fa-clock me-1"></i>${formatDate(query.timestamp)} | 
+                    <i class="fas fa-user me-1"></i>${query.user_id} | 
+                    <i class="fas fa-tachometer-alt me-1"></i>${formatTime(query.response_time_ms || 0)}
+                </small>
+            </div>
+        </div>
+    `;
+    
+    // 검색 결과 업데이트
+    let resultsHtml = '';
+    
+    // Product QnA 결과
+    if (query.product_results && query.product_results.length > 0) {
+        resultsHtml += `
+            <div class="mb-4">
+                <h6 class="text-primary"><i class="fas fa-coffee me-2"></i>Product QnA 결과 (${query.product_results.length}개)</h6>
+                <div class="list-group">
+        `;
+        
+        query.product_results.forEach((result, index) => {
+            resultsHtml += `
+                <div class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">${result.title}</h6>
+                        <small class="text-muted">점수: ${(result.combined_score * 100).toFixed(1)}%</small>
+                    </div>
+                    <p class="mb-1 small text-muted">${result.category}</p>
+                    <small><a href="${result.url}" target="_blank" class="text-decoration-none">링크 열기 <i class="fas fa-external-link-alt"></i></a></small>
+                </div>
+            `;
+        });
+        
+        resultsHtml += '</div></div>';
+    }
+    
+    // Bugs QnA 결과
+    if (query.bugs_results && query.bugs_results.length > 0) {
+        resultsHtml += `
+            <div class="mb-4">
+                <h6 class="text-success"><i class="fas fa-bug me-2"></i>Bugs QnA 결과 (${query.bugs_results.length}개)</h6>
+                <div class="list-group">
+        `;
+        
+        query.bugs_results.forEach((result, index) => {
+            resultsHtml += `
+                <div class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">${result.title}</h6>
+                        <small class="text-muted">점수: ${(result.combined_score * 100).toFixed(1)}%</small>
+                    </div>
+                    <p class="mb-1 small text-muted">${result.category}</p>
+                    <small><a href="${result.url}" target="_blank" class="text-decoration-none">링크 열기 <i class="fas fa-external-link-alt"></i></a></small>
+                </div>
+            `;
+        });
+        
+        resultsHtml += '</div></div>';
+    }
+    
+    if (!resultsHtml) {
+        resultsHtml = '<div class="text-center text-muted"><i class="fas fa-info-circle me-2"></i>검색 결과가 없습니다.</div>';
+    }
+    
+    document.getElementById('modalResults').innerHTML = resultsHtml;
+}
+</script>
+
+<!-- 질의 상세정보 모달 -->
+<div class="modal fade" id="queryDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-search me-2"></i>질의 상세정보
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="modalQueryText" class="mb-4">
+                    <!-- 질의 정보가 여기에 로드됩니다 -->
+                </div>
+                
+                <div id="modalResults">
+                    <!-- 검색 결과가 여기에 로드됩니다 -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>닫기
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %} 

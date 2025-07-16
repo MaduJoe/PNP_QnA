@@ -1,0 +1,51 @@
+# line_bot:
+#   access_token: ""      # Line Messaging API Access Token (채널 토큰)
+#   channel_secret: ""    # Line Messaging API Channel Secret (채널 서명 검증용 시크릿 키)
+
+line_bot:
+  access_token: "M2UQE4rOhiXD8TyyprqCpDdQVfmNrpKWRh8embjeieLS1Lu6EaCsY8C7j9Mc3p9plHTnccm0TKmG1BKHCcEUnnsrHHC/DeU2ps/Kq5CUJR1b/454hsuWqXRRBHoQEJfkA2DfxRnfwA6tMJgqJtV9XgdB04t89/1O/w1cDnyilFU="        # Line Messaging API Access Token
+  channel_secret: "43afab47db55a0226bf13fe4c170a97e"     # Line Messaging API Channel Secret
+
+
+mantis_api:
+  url: "https://bugs.pnpsecure.com/api/rest/index.php/issues"  # Mantis API Base URL
+  # url: "https://bugs.pnpsecure.com/api/rest/index.php/issues?page_size={page_size}&"  # Mantis API Base URL
+  api_key: "VTWnLywPscgWCxDh166WypK2Ic9ZVLDD"                  # Mantis API Key
+  page_size: 50                                  # Mantis API 페이지당 이슈 수
+  max_issues: 100                                   # 응답으로 반환할 최대 이슈 수
+
+
+app:
+  debug: True                                     # Flask 앱 디버그 모드 설정 (개발 중 True, 배포 시 False 권장)
+  port: 5000                                      # Flask 앱이 실행될 포트 번호
+
+
+# 로컬 임베딩 시스템 설정
+embedding:
+  model_name: "jhgan/ko-sroberta-multitask"  # 한국어 임베딩 모델
+  cache_dir: "./embeddings_cache"            # 임베딩 캐시 저장 경로
+  bugs_cache_dir: "./bugs_embeddings_cache"  # Mantis Bugs 전용 캐시 저장 경로
+  batch_size: 32                             # 배치 크기
+  max_length: 512                            # 최대 토큰 길이
+  top_k: 3                                   # 반환할 상위 결과 수 (통합 검색용)
+  # 카테고리별 결과 수 설정
+  product_top_k: 3                          # Product QnA (Manager 카테고리) 결과 수
+  bugs_top_k: 3                             # Bugs QnA (DBS, SA, Bugs 카테고리) 결과 수
+
+# 데이터 설정
+data:
+  articles_path: "./scripts/"                # 게시글 데이터 경로
+  dbs_file: "cafe_articles_dbs.csv"         # DBS 게시글 파일
+  mgr_file: "cafe_articles_mgr.csv"         # Manager 게시글 파일
+  sa_file: "cafe_articles_sa.csv"           # SA 게시글 파일
+  bugs_file: "mantis_bugs_20250715_150341.csv"  # Mantis Bugs 파일
+  enable_bugs_data: true                     # Mantis Bugs 데이터 활성화 여부
+
+# 질의 로깅 설정
+query_logging:
+  enabled: true                              # 질의 로깅 활성화 여부
+  db_path: "./query_logs.db"                # SQLite 데이터베이스 파일 경로
+  log_results: true                          # 검색 결과도 함께 저장할지 여부
+  log_response_time: true                    # 응답 시간 로깅 여부
+
+

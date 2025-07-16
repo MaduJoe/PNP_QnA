@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PNP QnA Bot 대시보드{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #64748b;
+            --success-color: #059669;
+            --danger-color: #dc2626;
+            --warning-color: #d97706;
+            --info-color: #0891b2;
+            --dark-color: #1e293b;
+            --light-color: #f8fafc;
+        }
+
+        body {
+            background-color: var(--light-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: var(--primary-color) !important;
+        }
+
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary-color), #3b82f6);
+            color: white;
+        }
+
+        .stat-card.success {
+            background: linear-gradient(135deg, var(--success-color), #10b981);
+        }
+
+        .stat-card.warning {
+            background: linear-gradient(135deg, var(--warning-color), #f59e0b);
+        }
+
+        .stat-card.info {
+            background: linear-gradient(135deg, var(--info-color), #06b6d4);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+        }
+
+        .table-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .badge-custom {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .sidebar {
+            background: white;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+            min-height: calc(100vh - 56px);
+        }
+
+        .nav-link {
+            color: var(--secondary-color);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin: 0.25rem 0;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--primary-color);
+            color: white !important;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .search-box {
+            background: white;
+            border-radius: 25px;
+            padding: 10px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .btn-custom {
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-custom:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .live-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--success-color);
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-chart-bar me-2"></i>PNP QnA Bot 대시보드
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">
+                            <i class="fas fa-home me-1"></i>대시보드
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/queries">
+                            <i class="fas fa-list me-1"></i>질의 목록
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="d-flex align-items-center">
+                    <span class="live-indicator me-2"></span>
+                    <small class="text-muted">실시간 업데이트</small>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid mt-4">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script>
+        // 공통 유틸리티 함수들
+        function formatNumber(num) {
+            return new Intl.NumberFormat('ko-KR').format(num);
+        }
+
+        function formatTime(ms) {
+            if (ms < 1000) return `${Math.round(ms)}ms`;
+            return `${(ms / 1000).toFixed(2)}s`;
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleString('ko-KR', {
+                timeZone: 'Asia/Seoul',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+
+        function showToast(message, type = 'info') {
+            const toastHtml = `
+                <div class="toast align-items-center text-white bg-${type} border-0" role="alert">
+                    <div class="d-flex">
+                        <div class="toast-body">${message}</div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            `;
+            
+            // 토스트 컨테이너가 없으면 생성
+            if (!document.getElementById('toast-container')) {
+                document.body.insertAdjacentHTML('beforeend', 
+                    '<div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3"></div>'
+                );
+            }
+            
+            const container = document.getElementById('toast-container');
+            container.insertAdjacentHTML('beforeend', toastHtml);
+            
+            const toast = new bootstrap.Toast(container.lastElementChild);
+            toast.show();
+        }
+
+        // 페이지 네비게이션 활성화
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html> 

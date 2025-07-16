@@ -1,0 +1,404 @@
+{% extends "base.html" %}
+
+{% block title %}질의 목록 - PNP QnA Bot{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-search me-2"></i>질의 검색 및 필터
+                    </h5>
+                    <a href="/" class="btn btn-outline-secondary btn-sm btn-custom">
+                        <i class="fas fa-arrow-left me-1"></i>대시보드로
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="search-box">
+                            <div class="input-group">
+                                <input type="text" id="search-input" class="form-control border-0" 
+                                       placeholder="질의 내용으로 검색...">
+                                <button class="btn btn-primary btn-custom" id="search-btn">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex gap-2">
+                            <select id="limit-selector" class="form-select">
+                                <option value="20" selected>20개씩 보기</option>
+                                <option value="50">50개씩 보기</option>
+                                <option value="100">100개씩 보기</option>
+                            </select>
+                            <button id="clear-search-btn" class="btn btn-outline-secondary btn-custom">
+                                <i class="fas fa-times"></i> 초기화
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-list me-2"></i><span id="queries-title">전체 질의 목록</span>
+                </h5>
+                <div class="d-flex align-items-center gap-2">
+                    <span id="queries-count" class="badge bg-primary">-</span>
+                    <button id="refresh-queries-btn" class="btn btn-outline-primary btn-sm btn-custom">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 60px;">ID</th>
+                                <th style="width: 150px;">시간</th>
+                                <th style="width: 120px;">사용자</th>
+                                <th>질의 내용</th>
+                                <th style="width: 120px;">결과 수</th>
+                                <th style="width: 100px;">응답시간</th>
+                                <th style="width: 80px;">상세</th>
+                            </tr>
+                        </thead>
+                        <tbody id="queries-table">
+                            <tr>
+                                <td colspan="7" class="text-center text-muted py-4">
+                                    <div class="loading"></div> 데이터 로딩 중...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 질의 상세 모달 -->
+<div class="modal fade" id="queryDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-info-circle me-2"></i>질의 상세 정보
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <div class="text-center">
+                    <div class="loading"></div> 로딩 중...
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let currentQueries = [];
+let currentSearchKeyword = '';
+let currentLimit = 20;
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadQueries();
+    
+    // 이벤트 리스너들
+    document.getElementById('search-btn').addEventListener('click', performSearch);
+    document.getElementById('search-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            performSearch();
+        }
+    });
+    
+    document.getElementById('clear-search-btn').addEventListener('click', function() {
+        document.getElementById('search-input').value = '';
+        currentSearchKeyword = '';
+        loadQueries();
+        updateTitle();
+    });
+    
+    document.getElementById('limit-selector').addEventListener('change', function() {
+        currentLimit = parseInt(this.value);
+        if (currentSearchKeyword) {
+            performSearch();
+        } else {
+            loadQueries();
+        }
+    });
+    
+    document.getElementById('refresh-queries-btn').addEventListener('click', function() {
+        this.innerHTML = '<div class="loading"></div>';
+        if (currentSearchKeyword) {
+            performSearch();
+        } else {
+            loadQueries();
+        }
+        setTimeout(() => {
+            this.innerHTML = '<i class="fas fa-sync-alt"></i>';
+        }, 1000);
+    });
+});
+
+function loadQueries() {
+    fetch(`/api/recent_queries?limit=${currentLimit}`)
+        .then(response => response.json())
+        .then(data => {
+            currentQueries = data;
+            updateQueriesTable(data);
+            updateTitle();
+        })
+        .catch(error => {
+            console.error('질의 로드 실패:', error);
+            showToast('질의 로드에 실패했습니다.', 'danger');
+        });
+}
+
+function performSearch() {
+    const keyword = document.getElementById('search-input').value.trim();
+    
+    if (!keyword) {
+        showToast('검색어를 입력해주세요.', 'warning');
+        return;
+    }
+    
+    currentSearchKeyword = keyword;
+    
+    fetch(`/api/search_queries?keyword=${encodeURIComponent(keyword)}&limit=${currentLimit}`)
+        .then(response => response.json())
+        .then(data => {
+            currentQueries = data;
+            updateQueriesTable(data);
+            updateTitle();
+        })
+        .catch(error => {
+            console.error('검색 실패:', error);
+            showToast('검색에 실패했습니다.', 'danger');
+        });
+}
+
+function updateQueriesTable(queries) {
+    const tbody = document.getElementById('queries-table');
+    tbody.innerHTML = '';
+    
+    if (queries.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="7" class="text-center text-muted py-4">
+                    ${currentSearchKeyword ? '검색 결과가 없습니다.' : '질의 데이터가 없습니다.'}
+                </td>
+            </tr>
+        `;
+        return;
+    }
+    
+    queries.forEach(query => {
+        const row = document.createElement('tr');
+        row.style.cursor = 'pointer';
+        
+        // 검색어 하이라이트
+        let queryText = query.query_text;
+        if (currentSearchKeyword) {
+            const regex = new RegExp(`(${currentSearchKeyword})`, 'gi');
+            queryText = queryText.replace(regex, '<mark>$1</mark>');
+        }
+        
+        row.innerHTML = `
+            <td><span class="badge bg-secondary">${query.id}</span></td>
+            <td><small>${formatDate(query.timestamp)}</small></td>
+            <td><span class="badge bg-info">${query.user_id.substring(0, 10)}...</span></td>
+            <td>
+                <button type="button" class="btn btn-link text-start p-0 text-decoration-none text-truncate" 
+                        style="max-width: 300px;" title="${query.query_text}"
+                        onclick="showQueryDetail(${query.id})">
+                    ${queryText}
+                </button>
+            </td>
+            <td>
+                <span class="badge bg-primary me-1" title="Product QnA">${query.product_results_count || 0}</span>
+                <span class="badge bg-success" title="Bugs QnA">${query.bugs_results_count || 0}</span>
+            </td>
+            <td>
+                <small class="text-muted">${formatTime(query.response_time_ms || 0)}</small>
+            </td>
+            <td>
+                <button class="btn btn-outline-primary btn-sm" onclick="showQueryDetail(${query.id})">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </td>
+        `;
+        
+        // 행 클릭 시 상세 보기
+        row.addEventListener('click', function(e) {
+            if (e.target.tagName !== 'BUTTON' && e.target.tagName !== 'I') {
+                showQueryDetail(query.id);
+            }
+        });
+        
+        tbody.appendChild(row);
+    });
+    
+    // 결과 수 업데이트
+    document.getElementById('queries-count').textContent = `${queries.length}개`;
+}
+
+function updateTitle() {
+    const titleElement = document.getElementById('queries-title');
+    if (currentSearchKeyword) {
+        titleElement.textContent = `"${currentSearchKeyword}" 검색 결과`;
+    } else {
+        titleElement.textContent = '전체 질의 목록';
+    }
+}
+
+function showQueryDetail(queryId) {
+    // 모달 열기
+    const modal = new bootstrap.Modal(document.getElementById('queryDetailModal'));
+    modal.show();
+    
+    // 로딩 상태 표시
+    document.getElementById('modal-body').innerHTML = `
+        <div class="text-center">
+            <div class="loading"></div> 상세 정보 로딩 중...
+        </div>
+    `;
+    
+    // 상세 정보 로드
+    fetch(`/api/query_detail/${queryId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            renderQueryDetail(data);
+        })
+        .catch(error => {
+            console.error('질의 상세 로드 실패:', error);
+            document.getElementById('modal-body').innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    상세 정보를 불러오는데 실패했습니다: ${error.message}
+                </div>
+            `;
+        });
+}
+
+function renderQueryDetail(query) {
+    const modalBody = document.getElementById('modal-body');
+    
+    let html = `
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <h6><i class="fas fa-info-circle me-2"></i>기본 정보</h6>
+                <table class="table table-sm">
+                    <tr><th>질의 ID:</th><td>${query.id}</td></tr>
+                    <tr><th>사용자 ID:</th><td><code>${query.user_id}</code></td></tr>
+                    <tr><th>질의 시간:</th><td>${formatDate(query.timestamp)}</td></tr>
+                    <tr><th>응답 시간:</th><td>${formatTime(query.response_time_ms || 0)}</td></tr>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h6><i class="fas fa-chart-bar me-2"></i>결과 통계</h6>
+                <table class="table table-sm">
+                    <tr><th>Product QnA:</th><td><span class="badge bg-primary">${query.product_results_count || 0}개</span></td></tr>
+                    <tr><th>Bugs QnA:</th><td><span class="badge bg-success">${query.bugs_results_count || 0}개</span></td></tr>
+                    <tr><th>총 결과:</th><td><span class="badge bg-secondary">${query.total_results_count || 0}개</span></td></tr>
+                </table>
+            </div>
+        </div>
+        
+        <div class="mb-4">
+            <h6><i class="fas fa-comment me-2"></i>질의 내용</h6>
+            <div class="alert alert-light">
+                <strong>${query.query_text}</strong>
+            </div>
+        </div>
+    `;
+    
+    // Product QnA 결과
+    if (query.product_results && query.product_results.length > 0) {
+        html += `
+            <div class="mb-4">
+                <h6><i class="fas fa-laptop me-2"></i>Product QnA 결과 (${query.product_results.length}개)</h6>
+                <div class="list-group">
+        `;
+        
+        query.product_results.forEach((result, index) => {
+            html += `
+                <div class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">${index + 1}. ${result.title}</h6>
+                            <p class="mb-1 text-muted">카테고리: ${result.category}</p>
+                            <small>점수: ${result.combined_score.toFixed(3)}</small>
+                        </div>
+                        <a href="${result.url}" target="_blank" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += `</div></div>`;
+    }
+    
+    // Bugs QnA 결과
+    if (query.bugs_results && query.bugs_results.length > 0) {
+        html += `
+            <div class="mb-4">
+                <h6><i class="fas fa-bug me-2"></i>Bugs QnA 결과 (${query.bugs_results.length}개)</h6>
+                <div class="list-group">
+        `;
+        
+        query.bugs_results.forEach((result, index) => {
+            html += `
+                <div class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">${index + 1}. ${result.title}</h6>
+                            <p class="mb-1 text-muted">카테고리: ${result.category}</p>
+                            <small>점수: ${result.combined_score.toFixed(3)}</small>
+                        </div>
+                        <a href="${result.url}" target="_blank" class="btn btn-outline-success btn-sm">
+                            <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += `</div></div>`;
+    }
+    
+    // 결과가 없는 경우
+    if ((!query.product_results || query.product_results.length === 0) && 
+        (!query.bugs_results || query.bugs_results.length === 0)) {
+        html += `
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                이 질의에 대한 검색 결과가 없습니다.
+            </div>
+        `;
+    }
+    
+    modalBody.innerHTML = html;
+}
+</script>
+{% endblock %} 

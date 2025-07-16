@@ -1,0 +1,188 @@
+========================================
+PnP QnA Bot 프로젝트 종합 개요 및 가이드
+========================================
+
+프로젝트 개요
+============
+
+PnP QnA Bot은 LINE 메신저를 통해 카페(Product) 및 Bugs 관련 질문에 대해 지능형 답변을 제공하는 하이브리드 검색 기반 챗봇 시스템입니다.
+
+주요 기능
+========
+
+1. 하이브리드 검색 엔진
+   - 텍스트 기반 TF-IDF 검색
+   - 임베딩 기반 의미론적 검색
+   - 종합 점수를 통한 최적 답변 제공
+
+2. 스마트 카테고리 분류
+   - Product QnA: cafe.naver.com 기반 카페 관련 질문
+   - Bugs QnA: bugs.pnpsecure.com 기반 Bugs 관련 질문
+   - URL 기반 자동 분류 시스템
+
+3. 실시간 쿼리 로깅 시스템
+   - SQLite 기반 질문/답변 저장
+   - 응답 시간 추적
+   - 사용자별 질문 이력 관리
+
+4. 웹 대시보드 모니터링
+   - 실시간 통계 및 시각화
+   - Chart.js 기반 데이터 시각화
+   - 검색 기능 및 CSV 내보내기
+
+시스템 구성 요소
+===============
+
+핵심 파일들:
+- pnp_qna_bot_embedding.py: LINE Bot 메인 서버
+- hybrid_search.py: 하이브리드 검색 엔진
+- query_logger.py: 쿼리 로깅 시스템
+- dashboard_app.py: 웹 대시보드 애플리케이션
+- config.yaml: 시스템 설정 파일
+
+관리 도구:
+- query_manager.py: 명령줄 쿼리 관리 도구
+- run_embedding_bot.py: Bot 실행 스크립트
+- run_dashboard.py: 대시보드 실행 스크립트
+
+템플릿 및 UI:
+- templates/dashboard.html: 메인 대시보드 화면
+- templates/queries.html: 쿼리 목록 화면
+- templates/base.html: 공통 템플릿
+
+데이터베이스:
+- query_logs.db: SQLite 데이터베이스 (쿼리 로그 저장)
+
+구현된 주요 기능
+===============
+
+1. 카테고리 분류 개선
+   ✅ URL 기반 분류 로직 구현
+   ✅ Product QnA / Bugs QnA 정확한 구분
+   ✅ 응답 메시지 개선
+
+2. 쿼리 로깅 시스템
+   ✅ SQLite 기반 로그 저장
+   ✅ 응답 시간 측정
+   ✅ 사용자별 통계
+   ✅ CSV 내보내기 기능
+
+3. 웹 대시보드
+   ✅ 실시간 통계 카드
+   ✅ 시간별/일별 패턴 차트
+   ✅ 카테고리별 성능 분석
+   ✅ 인기 키워드 분석
+   ✅ 최근 질문 목록
+   ✅ 고급 검색 기능
+   ✅ 모바일 반응형 디자인
+
+4. 관리 도구
+   ✅ 명령줄 쿼리 관리
+   ✅ 실시간 모니터링
+   ✅ 통계 분석 도구
+
+사용 방법
+=========
+
+1. LINE Bot 서버 실행:
+   python run_embedding_bot.py
+
+2. 웹 대시보드 실행:
+   python run_dashboard.py
+   브라우저에서 http://localhost:8080 접속
+
+3. 쿼리 관리 (명령줄):
+   python query_manager.py
+
+설정 파일 (config.yaml)
+======================
+
+주요 설정 항목:
+- embedding_dimension: 임베딩 차원 (기본값: 384)
+- similarity_threshold: 유사도 임계값 (기본값: 0.3)
+- max_results: 최대 결과 수 (기본값: 5)
+- query_logging.enabled: 로깅 활성화 여부
+- query_logging.db_path: 데이터베이스 경로
+
+FAQ (자주 묻는 질문)
+==================
+
+Q: 종합점수는 최대/최소 몇점인가요?
+A: 종합점수는 0.0 ~ 1.0 사이의 값입니다. 1.0에 가까울수록 더 정확한 답변입니다.
+
+Q: Product QnA와 Bugs QnA는 어떻게 구분되나요?
+A: URL 기반으로 자동 구분됩니다:
+   - Product QnA: cafe.naver.com 출처
+   - Bugs QnA: bugs.pnpsecure.com 출처
+
+Q: 질문 로그는 어디에 저장되나요?
+A: SQLite 데이터베이스(query_logs.db)에 저장되며, 웹 대시보드를 통해 확인할 수 있습니다.
+
+Q: 웹 대시보드는 어떤 포트에서 실행되나요?
+A: 기본적으로 8080 포트에서 실행됩니다. (http://localhost:8080)
+
+Q: 응답 시간이 느린 경우 어떻게 해야 하나요?
+A: config.yaml에서 max_results 값을 줄이거나 similarity_threshold 값을 높여서 검색 범위를 줄일 수 있습니다.
+
+Q: 대시보드에서 데이터가 실시간으로 업데이트되나요?
+A: 네, 30초마다 자동으로 통계가 업데이트됩니다.
+
+Q: CSV 내보내기 기능은 어떻게 사용하나요?
+A: 웹 대시보드의 "쿼리 목록" 페이지에서 날짜 범위를 선택하고 "CSV 내보내기" 버튼을 클릭하세요.
+
+Q: 임베딩 캐시는 어디에 저장되나요?
+A: embeddings_cache/ 및 bugs_embeddings_cache/ 폴더에 저장됩니다.
+
+Q: 새로운 데이터를 추가하려면 어떻게 해야 하나요?
+A: hybrid_search.py에서 데이터 로딩 부분을 수정하고 임베딩을 재생성해야 합니다.
+
+Q: Bot 서버와 대시보드를 동시에 실행할 수 있나요?
+A: 네, 서로 다른 포트를 사용하므로 동시 실행 가능합니다.
+
+문제 해결
+=========
+
+1. 모듈 import 오류
+   - 가상환경 활성화 확인: source .qna_env/bin/activate
+   - 의존성 설치: pip install -r requirements.txt
+
+2. 데이터베이스 오류
+   - query_logs.db 파일 권한 확인
+   - 디스크 공간 확인
+
+3. 대시보드 접속 불가
+   - 포트 8080이 사용 중인지 확인
+   - 방화벽 설정 확인
+
+4. 검색 결과가 부정확한 경우
+   - similarity_threshold 값 조정
+   - 임베딩 캐시 재생성
+
+성능 최적화 팁
+=============
+
+1. 임베딩 캐시 활용으로 초기 로딩 시간 단축
+2. config.yaml 튜닝으로 검색 성능 최적화
+3. 정기적인 데이터베이스 정리로 성능 유지
+4. 모니터링을 통한 지속적인 성능 개선
+
+버전 히스토리
+============
+
+v1.0: 기본 LINE Bot 기능
+v1.1: 카테고리 분류 개선
+v1.2: 쿼리 로깅 시스템 추가
+v1.3: 웹 대시보드 구현
+v1.4: 관리 도구 및 모니터링 기능 추가
+
+연락처 및 지원
+=============
+
+추가 질문이나 기술 지원이 필요한 경우:
+- 프로젝트 문서: QUERY_LOGGING_GUIDE.md, WEB_DASHBOARD_GUIDE.md
+- 설정 파일: config.yaml
+- 로그 파일: query_logs.db
+
+========================================
+마지막 업데이트: 2024년
+======================================== 
